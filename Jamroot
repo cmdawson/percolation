@@ -1,0 +1,26 @@
+# boost-build C:/boost_1_54_0/tools/build/v2 ; 
+project percolation
+	: requirements
+	<include>C:/boost_1_54_0 
+	<warnings>all
+	: default-build release
+	;
+
+lib honeycomb
+	:
+	honeycomb.cpp
+	:
+	<cxxflags>-Wno-unused-local-typedefs
+	<cxxflags>-std=c++0x
+	;
+	
+exe main
+	:
+	main.cpp honeycomb
+	:
+	<cxxflags>-Wno-unused-local-typedefs
+	<cxxflags>-std=c++0x
+	<link>static
+	;
+	
+install convenient-copy : main honeycomb : <location>. ; 

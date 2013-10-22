@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
+</head>
+<body>
+	<!-- <div>
+		<a href="http://christopheviau.com/d3_tutorial/">http://christopheviau.com/d3_tutorial/</a>
+		<br/>
+		<a href="http://alignedleft.com/tutorials/d3/scales">http://alignedleft.com/tutorials/d3/scales</a>
+	</div> -->
+	<div style="padding-left:25px;" align="left">
+	<input type='file' id='graphfile' onchange="fileChange(this.files)"><br/>
+	<label><input type='checkbox' onclick='labelChange(this);'>Labels</label>
+	</div>
+    <div id="viz" style="padding-left:25px;padding-right:25px;"></div>
+    <script type="text/javascript">
+	
+	
+	// callback for d3.txt below. Can also be defined within the actual function call 
+	// which seems to be fairly popular
+	function textCallBack(scontent)
+	{
+		var fdata = d3.csv.parseRows(scontent);
+		var colors = ["#00006A", "#ff0000", "#ff0000", "#ff0000", "#ff0000"]
+		
+		var width = 650;
+		var height = 0.8*width;
+		var padding = 25;
+		
+		d3.select("svg").remove();
+		
+		var sampleSVG = d3.select("#viz")
+			.append("svg")
+			.attr("width", width)
+			.attr("height", height);  
+			
+		var xscale = d3.scale.linear()
+			.domain([d3.min(fdata, function(d) { return +d[2];}),
+				d3.max(fdata, function(d) { return +d[2];})])
+			.range([padding,width-padding]);
+			
+		var yscale = d3.scale.linear()
+			.domain([d3.min(fdata, function(d) { return +d[3];}),
+				d3.max(fdata, function(d) { return +d[3];})])
+			.range([padding,height-padding]);
+		
+		sampleSVG.selectAll("circle")
+			.data(fdata)
+			.enter().append("circle").each(function(d) {
+				var circ = d3.select(this);
+				var svg = d3.select(circ.node().parentNode);
+				
+				circ.style("stroke", colors[+d[1]])
+					.style("fill", colors[+d[1]])
+					.attr("r", 2)
+					.attr("cx", xscale(d[2]))
+					.attr("cy", yscale(d[3]));
+				
+				d.slice(4).forEach(function(ii) {
+					sampleSVG.append("line")
+					.style("stroke", colors[+d[1]])
+					.attr("x1", xscale(d[2]))
+					.attr("y1", yscale(d[3]))
+					.attr("x2", function(dd) { return xscale(fdata[+ii][2]); })
+					.attr("y2", function(dd) { return yscale(fdata[+ii][3]); });
+				});
+				
+				sampleSVG.append("text")
+					.text(d[0])
+					.attr("x", xscale(d[2])+5)
+					.attr("y", yscale(d[3])+5)
+					.attr("font-family", "sans-serif")
+					.attr("font-size", "9px")
+					.attr("fill", colors[+d[1]])
+					.attr("visibility", "hidden");
+					
+			});
+	}
+	
+	//var sFile = d3.text("h16.csv", textCallBack);
+
+	function fileChange(files)
+	{
+		var sFile = d3.text(files[0].name, textCallBack);
+	}
+	
+	function labelChange(cb)
+	{
+		var sampleSVG = d3.select("#viz")
+			.selectAll("text")
+			.attr("visibility", cb.checked ? "visible" : "hidden");	
+	}
+
+    /* 
+	// Example: multiple circles with position specified in array
+	var dataset = [[50,50], [125,125], [200,50], [300,300]];
+	
+	var sampleSVG = d3.select("#viz")
+        .append("svg")
+        .attr("width", 500)
+        .attr("height", 500);   
+		
+	sampleSVG.selectAll("circle")
+		.data(dataset)
+		.enter().append("circle")
+		.style("stroke", "blue")
+		.style("fill", "white")
+		.attr("r", 25)
+		.attr("cx", function(d) { return d[0];})
+		.attr("cy", function(d) { return d[1];});
+	*/
+	
+    /* 
+	// Simple circle example
+	sampleSVG.append("circle")
+        .style("stroke", "gray")
+        .style("fill", "white")
+        .attr("r", 40)
+        .attr("cx", 75)
+        .attr("cy", 50)
+        .on("mouseover", function(){d3.select(this).style("fill", "aliceblue");})
+        .on("mouseout", function(){d3.select(this).style("fill", "white");});
+	*/
+    
+    </script>
+</body>
+</html>
