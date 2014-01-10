@@ -1,10 +1,10 @@
-#include "honeycomb.h"
+#include "pyrochlore.h"
 
 using namespace std;
 
 int main(void)
 {
-    Honeycomb foo(12);
+    Pyrochlore PC(12);
 
-    cout << foo.is_crossable() << endl;
+    cout << PC;
 }

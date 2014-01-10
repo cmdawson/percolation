@@ -9,6 +9,7 @@ project percolation
 lib pyrochlore
 	:
 	pyrochlore.cpp
+	lattice.cpp
 	:
 	<cxxflags>-Wno-unused-local-typedefs
 	<cxxflags>-std=c++0x
