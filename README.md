@@ -5,6 +5,7 @@ percolation
 This branch refactors the original honeycomb lattice to (hopefully) facilitate extensions to more general lattices.
 
 All such lattices now derive from an abstract base class called Lattice which contains all the logic necessary to determine if a long-range connected component exists. General lattices that derive from this are responsible for two things:
+
 1. Constructing the lattice
 2. Implementing percolate(const double& p, const double& q) 
 
