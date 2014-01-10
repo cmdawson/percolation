@@ -6,21 +6,21 @@ project percolation
 	: default-build release
 	;
 
-lib honeycomb
+lib pyrochlore
 	:
-	honeycomb.cpp
+	pyrochlore.cpp
 	:
 	<cxxflags>-Wno-unused-local-typedefs
 	<cxxflags>-std=c++0x
 	;
 	
-exe main
+exe test
 	:
-	main.cpp honeycomb
+	test.cpp pyrochlore
 	:
 	<cxxflags>-Wno-unused-local-typedefs
 	<cxxflags>-std=c++0x
 	<link>static
 	;
 	
-install convenient-copy : main honeycomb : <location>. ; 
+install convenient-copy : test pyrochlore : <location>. ; 
