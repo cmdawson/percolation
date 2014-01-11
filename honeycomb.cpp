@@ -7,7 +7,6 @@ using namespace boost;
 const double PI = math::constants::pi<double>();
 const double sin_pi_6 = sin(PI/6.0);
 const double cos_pi_6 = cos(PI/6.0);
-
 const double dx = 2.0 * cos_pi_6;
 const double dy = 1.0 + sin_pi_6;
 
@@ -38,11 +37,11 @@ Honeycomb::Honeycomb(int n) : Lattice(n)
 		adjacency_list[points[p0]].y = p0.y;
 		adjacency_list[points[p0]].color = Color::white();
 		if (p0.x < -eps)
-		    adjacency_list[points[p0]].traverse = VertexT::START;
+		    adjacency_list[points[p0]].traverse = VertexT::NEAR;
 		else if (p0.x > xmax-eps)
-		    adjacency_list[points[p0]].traverse = VertexT::END;
+		    adjacency_list[points[p0]].traverse = VertexT::FAR;
 		else
-		    adjacency_list[points[p0]].traverse = VertexT::MIDDLE;
+		    adjacency_list[points[p0]].traverse = VertexT::NEITHER;
 	    }
 	    
 	    for (int a=0;a<6;a++)
@@ -58,11 +57,11 @@ Honeycomb::Honeycomb(int n) : Lattice(n)
 		    adjacency_list[points[p1]].y = p1.y;
 		    adjacency_list[points[p1]].color = Color::white();
 		    if (p1.x < -eps)
-			adjacency_list[points[p1]].traverse = VertexT::START;
+			adjacency_list[points[p1]].traverse = VertexT::NEAR;
 		    else if (p1.x > xmax-eps)
-			adjacency_list[points[p1]].traverse = VertexT::END;
+			adjacency_list[points[p1]].traverse = VertexT::FAR;
 		    else
-			adjacency_list[points[p1]].traverse = VertexT::MIDDLE;
+			adjacency_list[points[p1]].traverse = VertexT::NEITHER;
 		}
 		if (!edge(points[p0], points[p1], adjacency_list).second)
 		    // TODO edge type?

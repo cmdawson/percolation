@@ -18,7 +18,7 @@ protected:
 	int index;
 	double x,y,z;
 	boost::default_color_type color;
-	enum TraverseFlag {START,MIDDLE,END} traverse;
+	enum TraverseFlag {NEITHER,NEAR,FAR} traverse;
     };
     struct EdgeT {
 	int group; // no idea why there is the 'maybe used uninitialized' warning.
@@ -48,7 +48,7 @@ protected:
 	Visitor(bool* cc) : crossed(cc) {}
 	void discover_vertex(Vertex v, const AdjacencyList& g) 
 	{
-	    if (g[v].traverse == VertexT::END)
+	    if (g[v].traverse == VertexT::FAR)
 		*crossed = true;
 	}
     };
@@ -85,7 +85,7 @@ public:
     {
 	// The (percolated) 2d Lattice is said to be crossable if there is
 	// a connected compenent which includes at least one vertex on one 
-	// 'boundary' (labelled START) and at least one on the 'END' boundary
+	// 'boundary' (labelled NEAR) and at least one on the 'FAR' boundary
 	std::vector<Vertex> start_vertices;
 	start_vertices.reserve(_n);
 	typedef boost::color_traits<boost::default_color_type> Color;
@@ -94,7 +94,7 @@ public:
 
 	while(v0 != v1)
 	{
-	    if (adjacency_list[*v0].traverse == VertexT::START)
+	    if (adjacency_list[*v0].traverse == VertexT::NEAR)
 		start_vertices.push_back(*v0);
 	    adjacency_list[*v0].color = Color::white();
 	    ++v0;
@@ -103,7 +103,7 @@ public:
 	for (unsigned jj=0;jj<start_vertices.size();jj++)
 	{
 	    if (adjacency_list[start_vertices[jj]].color == Color::black())
-		    continue;
+		    continue;   // already visited this one
 		    
 	    bool xing = false;
 	    Visitor xvis(&xing);
@@ -116,7 +116,7 @@ public:
 	return false;
     }
 
-    virtual void percolate(const double& p, const double& q) {}
+    virtual void percolate(const double& p, const double& q) = 0;
 
     friend std::ostream &operator<<(std::ostream &output, const Lattice &H);
 };
