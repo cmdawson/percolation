@@ -4,21 +4,8 @@
 using namespace std;
 using namespace boost;
 
-
-Lattice::Vertex add_point(point3d& p, Lattice::AdjacencyList& adj)
-{
-    typedef color_traits<default_color_type> Color;
-    static int counter = 0;
-    Lattice::Vertex v = add_vertex(adj);
-    adj[v].x = p.x;
-    adj[v].y = p.y;
-    adj[v].z = p.z;
-    adj[v].index = counter++;
-    adj[v].color = Color::white();
-
-    return v;
-}
-
+// Helper routine for constructor
+Lattice::Vertex add_point(point3d& p, Lattice::AdjacencyList& adj);
 
 Pyrochlore::Pyrochlore(int n) : Lattice(n)
 {
@@ -72,4 +59,19 @@ Pyrochlore::Pyrochlore(int n) : Lattice(n)
 
 void Pyrochlore::percolate(const double& p, const double& q)
 {
+    // TODO
+}
+
+Lattice::Vertex add_point(point3d& p, Lattice::AdjacencyList& adj)
+{
+    typedef color_traits<default_color_type> Color;
+    static int counter = 0;
+    Lattice::Vertex v = add_vertex(adj);
+    adj[v].x = p.x;
+    adj[v].y = p.y;
+    adj[v].z = p.z;
+    adj[v].index = counter++;
+    adj[v].color = Color::white();
+
+    return v;
 }

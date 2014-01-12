@@ -9,7 +9,6 @@
 #include <boost/graph/depth_first_search.hpp>
 #include <boost/graph/copy.hpp>
 #include <boost/random.hpp>
-#include "point3d.h"
 
 class Lattice
 {
