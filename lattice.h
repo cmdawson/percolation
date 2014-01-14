@@ -88,7 +88,8 @@ public:
 	std::vector<Vertex> start_vertices;
 	start_vertices.reserve(_n);
 	typedef boost::color_traits<boost::default_color_type> Color;
-	boost::graph_traits<AdjacencyList>::vertex_iterator v0, v1;
+	//boost::graph_traits<AdjacencyList>::vertex_iterator v0, v1;
+	vertex_iter v0, v1;
 	boost::tie(v0,v1) = boost::vertices(adjacency_list);
 
 	while(v0 != v1)

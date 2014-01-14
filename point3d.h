@@ -34,11 +34,35 @@ public:
 	return *this;
     }
 
+    point3d& operator-=(const point3d& rhs)
+    {
+	x -= rhs.x;
+	y -= rhs.y;
+	z -= rhs.z;
+	return *this;
+    }
+
     const point3d operator+(const point3d &rhs) const
     {
 	point3d result = *this;
 	result += rhs;
 	return result;
+    }
+
+    const point3d operator-(const point3d &rhs) const
+    {
+	point3d result = *this;
+	result -= rhs;
+	return result;
+    }
+
+
+    point3d& operator*=(const double& alpha)
+    {
+	x *= alpha;
+	y *= alpha;
+	z *= alpha;
+	return *this;
     }
 
     static Lattice::Vertex add_as_vertex(const point3d& p, int ii, Lattice::AdjacencyList& adj)
@@ -55,5 +79,11 @@ public:
     }
 
 };
+
+inline point3d operator*(const double& alpha, const point3d& rhs)
+{
+    point3d ret = rhs;
+    return ret *= alpha;
+}
 
 #endif

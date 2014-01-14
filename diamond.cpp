@@ -11,6 +11,7 @@ using namespace boost;
 
 Diamond::Diamond(int n) : Lattice(n)
 {
+    // cubic unit cell of the diamond 'lattice'
     vector<point3d> ucell{
 	point3d(0,0,0), point3d(0,2,2), point3d(2,0,2),
 	point3d(2,2,0), point3d(3,3,3), point3d(3,1,1),
@@ -19,22 +20,19 @@ Diamond::Diamond(int n) : Lattice(n)
 	point3d(0,4,4), point3d(4,0,4), point3d(4,4,4),
 	point3d(4,2,2), point3d(2,4,2), point3d(2,2,4)
     };
-
-    vector<point3d> edges{
+    // valid edge vectors
+    vector<point3d> evec{
 	point3d(1,1,1), point3d(1,1,-1), point3d(1,-1,1), point3d(-1,1,1)
     };
-
 
     map<point3d,Vertex> vertex_map;
     int index = 0;
 
-
-    // Add vertices by translating unit cell
+    // add vertices by translating unit cell
     for (int i=0;i<n;i++)
 	for (int j=0;j<n;j++)
 	    for (int k=0;k<n;k++)
 	    {
-		// (add shifted unit cells, append to map)
 		point3d tr(4*i,4*j,4*k);
 		for (const auto& p : ucell)
 		{
@@ -44,11 +42,11 @@ Diamond::Diamond(int n) : Lattice(n)
 		}
 	    }
 
-    // add all edges 
+    // add edges by searching from each vertex
     for (const auto& p : vertex_map)
     {
 	Vertex vp = vertex_map[p.first];
-	for (const auto& e : edges)
+	for (const auto& e : evec)
 	{
 	    point3d nbr = p.first + e;
 	    const auto& vn = vertex_map.find(nbr);

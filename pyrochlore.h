@@ -1,10 +1,12 @@
 #ifndef _INC_PERC_PYROCHLORE_H
 #define _INC_PERC_PYROCHLORE_H
 
-#include "lattice.h"
+#include "diamond.h"
 
-class Pyrochlore : public Lattice
+class Pyrochlore : public Diamond
 {
+private:
+    AdjacencyList diamond_adjacency;
 public:
     Pyrochlore(int n);
     ~Pyrochlore() {}

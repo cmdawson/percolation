@@ -1,10 +1,10 @@
-#include "diamond.h"
+#include "pyrochlore.h"
 
 using namespace std;
 
 int main(void)
 {
-    Diamond D(3);
+    Pyrochlore PC(1);
 
-    cout << D;
+    cout << PC;
 }

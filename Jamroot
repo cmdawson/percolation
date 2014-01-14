@@ -6,8 +6,9 @@ project percolation
 	: default-build release
 	;
 
-lib diamond
+lib lattice
 	:
+	pyrochlore.cpp
 	diamond.cpp
 	lattice.cpp
 	:
@@ -17,11 +18,11 @@ lib diamond
 	
 exe test
 	:
-	test.cpp diamond
+	test.cpp lattice
 	:
 	<cxxflags>-Wno-unused-local-typedefs
 	<cxxflags>-std=c++0x
 	<link>static
 	;
 	
-install convenient-copy : test diamond : <location>. ; 
+install convenient-copy : test lattice : <location>. ; 
