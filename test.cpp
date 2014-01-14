@@ -4,7 +4,7 @@ using namespace std;
 
 int main(void)
 {
-    Diamond D(1);
+    Diamond D(3);
 
     cout << D;
 }

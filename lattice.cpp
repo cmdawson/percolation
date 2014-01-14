@@ -1,4 +1,6 @@
 #include "lattice.h"
+#include <map>
+#include <stdexcept>
 #include <boost/format.hpp>
 
 using namespace std;
@@ -12,12 +14,44 @@ random::uniform_01<random::mt19937,double> Lattice::random01(random::mt19937(42)
  * See http://en.wikipedia.org/wiki/Chemical_table_file for specification or lack
  * thereof. It appears to be a fixed width format, but the specs are so arcane
  * I've had to just verbatim copy the format of examples */
+
 ostream &operator<<(ostream &output, const Lattice& H)
 {
+    /* Chemdoodle JSON format ??
+    output << "\"m\":[{";
+    format xyz("{\"x\":%1$.2f,\"y\":%2$.2f,\"z\":%3$.2f}"); // 3 floats, width=10
+    Lattice::vertex_iter v0, v1;
+    tie(v0,v1) = vertices(H.adjacency_list);
+    map<Lattice::Vertex, int> oidx;
+    int ii = 0;
+
+    if (v0 != v1)
+    {
+	output << xyz % H.adjacency_list[*v0].x % H.adjacency_list[*v0].y 
+		    % H.adjacency_list[*v0].z;
+	oidx[*v0] = ii++;
+    }
+    ++v0;
+	
+    while (v0 != v1)
+    {
+	output << "," << xyz % H.adjacency_list[*v0].x % H.adjacency_list[*v0].y 
+		    % H.adjacency_list[*v0].z;
+	oidx[*v0] = ii++;
+	++v0;
+    } 
+    output << "]}";
+    return output; */
+
     const char* vsuffix = " C   0  0  0  0  0  0  0  0  0  0  0  0";
     const char* esuffix = "  1  0  0  0  0";
     format vformat("%1$10.4f%2$10.4f%3$10.4f"); // 3 floats, width=10
     format eformat("%1$3d%2$3d"); // 2 ints, width=3
+    map<Lattice::Vertex, unsigned> oidx;
+    unsigned ii = 0;
+
+    if (num_vertices(H.adjacency_list) > 999)
+	throw runtime_error("MOL files can only cope with <999 vertices");
 
     output << "percolatedlattice" << endl;
     output << " PERC/whatever101" << endl << endl;
@@ -33,6 +67,7 @@ ostream &operator<<(ostream &output, const Lattice& H)
 		    % H.adjacency_list[*v0].y 
 		    % H.adjacency_list[*v0].z 
 	    << vsuffix << endl;
+	oidx[*v0] = ii++;
 	++v0;
     }
     
@@ -40,9 +75,11 @@ ostream &operator<<(ostream &output, const Lattice& H)
     tie(e0,e1) = edges(H.adjacency_list);
     while (e0 != e1)
     {
-	unsigned src = H.adjacency_list[source(*e0,H.adjacency_list)].index;
-	unsigned tgt = H.adjacency_list[target(*e0,H.adjacency_list)].index;
-	output << eformat % (src+1) % (tgt+1) << esuffix << endl;
+	//unsigned src = H.adjacency_list[source(*e0,H.adjacency_list)].index;
+	//unsigned tgt = H.adjacency_list[target(*e0,H.adjacency_list)].index;
+	unsigned src = oidx[source(*e0,H.adjacency_list)] + 1;
+	unsigned tgt = oidx[target(*e0,H.adjacency_list)] + 1;
+	output << eformat % src % tgt << esuffix << endl;
 	++e0;
     }
 

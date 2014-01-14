@@ -28,22 +28,32 @@ Diamond::Diamond(int n) : Lattice(n)
     map<point3d,Vertex> vertex_map;
     int index = 0;
 
-    // Adding a single unit cell:
-    for (const auto& p : ucell)
-    {
-	Vertex v = point3d::add_as_vertex(p, index++, adjacency_list);
-	vertex_map[p] = v;
-    }
 
-    // (add shifted unit cells, append to map)
+    // Add vertices by translating unit cell
+    for (int i=0;i<n;i++)
+	for (int j=0;j<n;j++)
+	    for (int k=0;k<n;k++)
+	    {
+		// (add shifted unit cells, append to map)
+		point3d tr(4*i,4*j,4*k);
+		for (const auto& p : ucell)
+		{
+		    point3d newp = p+tr;
+		    if (vertex_map.find(newp) == vertex_map.end())
+			vertex_map[newp] = point3d::add_as_vertex(newp, index++, adjacency_list);
+		}
+	    }
+
+    // add all edges 
     for (const auto& p : vertex_map)
     {
+	Vertex vp = vertex_map[p.first];
 	for (const auto& e : edges)
 	{
-
 	    point3d nbr = p.first + e;
-	    if (vertex_map.find(nbr) != vertex_map.end())
-		add_edge(vertex_map[p.first], vertex_map[nbr], adjacency_list);
+	    const auto& vn = vertex_map.find(nbr);
+	    if (vn != vertex_map.end())
+		add_edge(vp, vn->second, adjacency_list);
 	}
     }
 }
