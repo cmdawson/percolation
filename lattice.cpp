@@ -17,32 +17,50 @@ random::uniform_01<random::mt19937,double> Lattice::random01(random::mt19937(42)
 
 ostream &operator<<(ostream &output, const Lattice& H)
 {
-    /* Chemdoodle JSON format ??
-    output << "\"m\":[{";
-    format xyz("{\"x\":%1$.2f,\"y\":%2$.2f,\"z\":%3$.2f}"); // 3 floats, width=10
+    map<Lattice::Vertex, unsigned> oidx;
+    unsigned ii = 0;
+    format vformat("{\"x\":%1$.2f,\"y\":%2$.2f,\"z\":%3$.2f}"); 
+
+    output << "{\"vert\":[";
+
     Lattice::vertex_iter v0, v1;
     tie(v0,v1) = vertices(H.adjacency_list);
-    map<Lattice::Vertex, int> oidx;
-    int ii = 0;
 
     if (v0 != v1)
     {
-	output << xyz % H.adjacency_list[*v0].x % H.adjacency_list[*v0].y 
+	output << vformat % H.adjacency_list[*v0].x % H.adjacency_list[*v0].y 
 		    % H.adjacency_list[*v0].z;
 	oidx[*v0] = ii++;
     }
-    ++v0;
-	
-    while (v0 != v1)
+    while (++v0 != v1)
     {
-	output << "," << xyz % H.adjacency_list[*v0].x % H.adjacency_list[*v0].y 
-		    % H.adjacency_list[*v0].z;
+	output << "," << vformat % H.adjacency_list[*v0].x
+	    % H.adjacency_list[*v0].y % H.adjacency_list[*v0].z;
 	oidx[*v0] = ii++;
-	++v0;
-    } 
-    output << "]}";
-    return output; */
+    }
 
+    output << "],\"edge\":[";
+
+    graph_traits<Lattice::AdjacencyList>::edge_iterator e0, e1;
+    tie(e0,e1) = edges(H.adjacency_list);
+
+    if (e0 != e1)
+    {
+	unsigned src = oidx[source(*e0,H.adjacency_list)];
+	unsigned tgt = oidx[target(*e0,H.adjacency_list)];
+	output << "[" << src << "," << tgt << "]";
+    }
+    while (++e0 != e1)
+    {
+	unsigned src = oidx[source(*e0,H.adjacency_list)];
+	unsigned tgt = oidx[target(*e0,H.adjacency_list)];
+	output << ",[" << src << "," << tgt << "]";
+    }
+    output << "]}";
+
+    return output;
+
+    /*  MDL mol format version
     const char* vsuffix = " C   0  0  0  0  0  0  0  0  0  0  0  0";
     const char* esuffix = "  1  0  0  0  0";
     format vformat("%1$10.4f%2$10.4f%3$10.4f"); // 3 floats, width=10
@@ -85,5 +103,5 @@ ostream &operator<<(ostream &output, const Lattice& H)
 
     output << "M  END";
     
-    return output;
+    return output; */
 }

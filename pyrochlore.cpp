@@ -57,6 +57,9 @@ Pyrochlore::Pyrochlore(int n) : Diamond(n)
 	    for (unsigned k=j+1;k<4;k++)
 		add_edge(tetra[j], tetra[k], adjacency_list);
     }
+
+    //cout << num_vertices(adjacency_list) << endl;
+    //cout << num_edges(adjacency_list) << endl;
 }
 
 void Pyrochlore::percolate(const double& p, const double& q)

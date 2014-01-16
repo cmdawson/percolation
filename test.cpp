@@ -4,7 +4,8 @@ using namespace std;
 
 int main(void)
 {
-    Pyrochlore PC(1);
+    //Diamond DM(2);	
+    Pyrochlore PC(3);
 
     cout << PC;
 }
