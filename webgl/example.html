@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml"> 
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Glattice Example</title>
+    <style>
+	html, body, div, canvas {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+	}
+
+	#dropdown {
+	    position: absolute;
+	    right: 0px;
+	    top: 20px;
+	    font-size: 1em;
+	    color: white;
+	    z-index: 1;
+	    height: 1.5em;
+	    width: 140px;
+	}
+    </style>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script src="babylon.1.8.0.js"></script>
+    <script src="Glattice.js"></script>
+</head>
+<body>
+    <div id="rootDiv">
+	<canvas id="renderCanvas"></canvas>
+	<div id="dropdown">
+	    <select id='graphfile' onchange="Glattice.load(this.value)">
+		<option value="json/diamond2.json">Diamond(2)</option>
+		<option value="json/diamond3.json">Diamond(3)</option>
+		<option value="json/pyrochlore1.json">Pyrochlore(1)</option>
+		<option value="json/pyrochlore2.json">Pyrochlore(2)</option>
+		<option value="json/pyrochlore3.json">Pyrochlore(3)</option>
+	    </select>
+	</div>
+    </div>
+</body>
+
+<script type="text/javascript">
+    Glattice.init(document.getElementById("renderCanvas"));
+    Glattice.load("json/diamond2.json");
+</script>
+
+</html>
