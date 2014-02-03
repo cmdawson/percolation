@@ -21,7 +21,7 @@ Usage involves including the following bits in your HTML
     Glattice.init(document.getElementById("renderCanvas"));
     Glattice.load("alattice.json");
 </script>
-'''
+```
 Note that if you load such a page from your local filesystem you'll need to ensure that the browser allows local javascript access to files, e.g. on chromium use the switch --allow-file-access-from-files.
 
 The JSON consists of two lists, one for vertex coordinates (x,y,z), and one for edges specified as a pair of vertice indices (i,j). For example a 5x5 square looks this
