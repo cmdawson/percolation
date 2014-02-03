@@ -1,5 +1,5 @@
 #include "honeycomb.h"
-#include "point2d.h"
+#include "point3d.h"
 
 using namespace std;
 using namespace boost;
@@ -13,8 +13,8 @@ const double dy = 1.0 + sin_pi_6;
 Honeycomb::Honeycomb(int n) : Lattice(n)
 {
     typedef color_traits<default_color_type> Color;
-    map<point2d,Vertex> points;
-    point2d p0, p1;
+    map<point3d,Vertex> points;
+    point3d p0, p1;
     int counter = 0;
 
     double xmax = 2.0*_n*cos_pi_6;

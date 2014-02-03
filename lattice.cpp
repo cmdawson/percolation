@@ -19,7 +19,8 @@ ostream &operator<<(ostream &output, const Lattice& H)
 {
     map<Lattice::Vertex, unsigned> oidx;
     unsigned ii = 0;
-    format vformat("{\"x\":%1$.2f,\"y\":%2$.2f,\"z\":%3$.2f}"); 
+    format vformat("{\"x\":%1$.2f,\"y\":%2$.2f,\"z\":%3$.2f,"
+	    "\"tr\":%4$d,\"c\":%5$d}"); 
 
     output << "{\"vert\":[";
 
@@ -29,13 +30,15 @@ ostream &operator<<(ostream &output, const Lattice& H)
     if (v0 != v1)
     {
 	output << vformat % H.adjacency_list[*v0].x % H.adjacency_list[*v0].y 
-		    % H.adjacency_list[*v0].z;
+	    % H.adjacency_list[*v0].z % H.adjacency_list[*v0].traverse
+	    % H.adjacency_list[*v0].color;
 	oidx[*v0] = ii++;
     }
     while (++v0 != v1)
     {
-	output << "," << vformat % H.adjacency_list[*v0].x
-	    % H.adjacency_list[*v0].y % H.adjacency_list[*v0].z;
+	output << "," << vformat % H.adjacency_list[*v0].x % H.adjacency_list[*v0].y
+	    % H.adjacency_list[*v0].z % H.adjacency_list[*v0].traverse
+	    % H.adjacency_list[*v0].color;
 	oidx[*v0] = ii++;
     }
 

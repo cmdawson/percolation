@@ -11,6 +11,7 @@ lib lattice
 	pyrochlore.cpp
 	diamond.cpp
 	lattice.cpp
+	honeycomb.cpp
 	:
 	<cxxflags>-Wno-unused-local-typedefs
 	<cxxflags>-std=c++0x

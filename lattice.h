@@ -7,8 +7,11 @@
 #include <ostream>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/depth_first_search.hpp>
+#include <boost/graph/undirected_dfs.hpp>
 #include <boost/graph/copy.hpp>
 #include <boost/random.hpp>
+
+#include <iostream>
 
 class Lattice
 {
@@ -20,9 +23,9 @@ protected:
 	enum TraverseFlag {NEITHER,NEAR,FAR} traverse;
     };
     struct EdgeT {
+	boost::default_color_type color;
 	int group; // no idea why there is the 'maybe used uninitialized' warning.
     };
-
 	
 public:
     typedef boost::adjacency_list<
@@ -33,22 +36,30 @@ public:
 protected:
     typedef boost::graph_traits<AdjacencyList>::vertex_iterator vertex_iter;
     typedef boost::graph_traits<AdjacencyList>::edge_iterator edge_iter;
-    typedef boost::graph_traits <AdjacencyList>::vertices_size_type vertices_size_type;
+    typedef boost::graph_traits<AdjacencyList>::vertices_size_type vertices_size_t;
+    typedef boost::graph_traits<AdjacencyList>::edges_size_type edges_size_t;
 
     static boost::uniform_01<boost::random::mt19937,double> random01;
 
     int _n;
     AdjacencyList adjacency_list;
 
+
     class Visitor : public boost::default_dfs_visitor
     {
     public:
-	bool* crossed;
-	Visitor(bool* cc) : crossed(cc) {}
+	struct dfs_crossed { };
+
+	Visitor(void) {}
 	void discover_vertex(Vertex v, const AdjacencyList& g) 
 	{
 	    if (g[v].traverse == VertexT::FAR)
-		*crossed = true;
+	    {
+		//std::cout << "CROSSED!" << std::endl;
+		throw dfs_crossed();
+	    }
+	    //std::cout << "Discovered " << g[v].traverse << " at " << g[v].x << ","
+	    //	<< g[v].y << g[v].z << ") " <<std::endl;
 	}
     };
     
@@ -85,6 +96,9 @@ public:
 	// The (percolated) 2d Lattice is said to be crossable if there is
 	// a connected compenent which includes at least one vertex on one 
 	// 'boundary' (labelled NEAR) and at least one on the 'FAR' boundary
+	//vertices_size_t nverts = boost::num_vertices(adjacency_list);
+	//edges_size_t nedges = boost::num_edges(adjacency_list);
+
 	std::vector<Vertex> start_vertices;
 	start_vertices.reserve(_n);
 	typedef boost::color_traits<boost::default_color_type> Color;
@@ -92,6 +106,7 @@ public:
 	vertex_iter v0, v1;
 	boost::tie(v0,v1) = boost::vertices(adjacency_list);
 
+	// identify start vertices and reset color for dfs	
 	while(v0 != v1)
 	{
 	    if (adjacency_list[*v0].traverse == VertexT::NEAR)
@@ -99,19 +114,33 @@ public:
 	    adjacency_list[*v0].color = Color::white();
 	    ++v0;
 	}
-	
+
+	// reset edge colors for dfs. 
+	edge_iter e0, e1;
+	boost::tie(e0,e1) = boost::edges(adjacency_list);
+	while (e0 != e1)
+	    adjacency_list[*(e0++)].color = Color::white();
+
 	for (unsigned jj=0;jj<start_vertices.size();jj++)
 	{
 	    if (adjacency_list[start_vertices[jj]].color == Color::black())
 		    continue;   // already visited this one
 		    
-	    bool xing = false;
-	    Visitor xvis(&xing);
+	    Visitor xvis;
+	    //boost::depth_first_visit(adjacency_list, start_vertices[jj], xvis, get(&VertexT::color, adjacency_list));
 
-	    boost::depth_first_visit(adjacency_list, start_vertices[jj], xvis, get(&VertexT::color, adjacency_list));
-	    
-	    if (xing)
+	    // This seems like a misuse of exceptions, however it's the recommended
+	    // method.
+	    try 
+	    {
+		undirected_dfs(adjacency_list, xvis, get(&VertexT::color,
+		    adjacency_list), get(&EdgeT::color, adjacency_list),
+		    start_vertices[jj]);
+	    }
+	    catch (Visitor::dfs_crossed& xd)
+	    {
 		return true;
+	    }
 	}
 	return false;
     }
