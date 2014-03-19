@@ -51,8 +51,9 @@ Pyrochlore::Pyrochlore(int n) : Diamond(n)
 				if(diamond_adjacency[v].traverse==VertexT::NEAR)
 				{
 						if(adjacency_list[new_vertex].x==-0.5)
-					adjacency_list[new_vertex].traverse=diamond_adjacency[v].traverse;
-					else adjacency_list[new_vertex].traverse=VertexT::NEITHER;
+							adjacency_list[new_vertex].traverse=diamond_adjacency[v].traverse;
+						else
+							adjacency_list[new_vertex].traverse=VertexT::NEITHER;
 				}
 				else if(diamond_adjacency[v].traverse==VertexT::FAR)
 				{
@@ -64,14 +65,14 @@ Pyrochlore::Pyrochlore(int n) : Diamond(n)
 				//cout<<adjacency_list[new_vertex].x<<" "<<adjacency_list[new_vertex].y<<" "<<adjacency_list[new_vertex].z<<" "<< adjacency_list[new_vertex].traverse<<endl;
 	 	   }
 	 	   else
-			tetra[j] = tv->second;		
+				tetra[j] = tv->second;		
 		}
 
 	// add all 6 edges of this tetrahedron
 		for (unsigned j=0;j<4;j++)
-	    for (unsigned k=j+1;k<4;k++)
-			{		add_edge(tetra[j], tetra[k], adjacency_list);
-			}
+			for (unsigned k=j+1;k<4;k++)
+					add_edge(tetra[j], tetra[k], adjacency_list);
+			
     }
 
     //cout << num_vertices(adjacency_list) << endl;

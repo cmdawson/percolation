@@ -74,7 +74,7 @@ Diamond::Diamond(int n) : Lattice(n)
 	    point3d nbr = p.first + e;
 	    const auto& vn = vertex_map.find(nbr);
 	    if (vn != vertex_map.end())
-		add_edge(vp, vn->second, adjacency_list);
+			add_edge(vp, vn->second, adjacency_list);
 	}
     }
 }

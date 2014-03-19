@@ -6,8 +6,9 @@
 #include <string>
 #include <ostream>
 #include <boost/graph/adjacency_list.hpp>
-#include <boost/graph/depth_first_search.hpp>
-#include <boost/graph/undirected_dfs.hpp>
+//#include <boost/graph/depth_first_search.hpp>
+//#include <boost/graph/undirected_dfs.hpp>
+#include "undirected_traverse.hpp"
 #include <boost/graph/copy.hpp>
 #include <boost/random.hpp>
 
@@ -53,14 +54,21 @@ protected:
 	Visitor(void) {}
 	void discover_vertex(Vertex v, const AdjacencyList& g) 
 	{
+	    std::cout << "Discovered " << g[v].traverse << " at " << g[v].x << ","
+	    	<< g[v].y << "," << g[v].z << std::endl;
 	    if (g[v].traverse == VertexT::FAR)
 	    {
 		//std::cout << "CROSSED!" << std::endl;
 		throw dfs_crossed();
 	    }
-	    //std::cout << "Discovered " << g[v].traverse << " at " << g[v].x << ","
-	    //	<< g[v].y << g[v].z << ") " <<std::endl;
 	}
+
+	/*void start_vertex(Vertex v, const AdjacencyList& g)
+	{
+	    std::cout << "Start " << g[v].traverse << " at " << g[v].x << ","
+	    	<< g[v].y << "," << g[v].z << std::endl;
+
+	}*/
     };
     
 public:
@@ -133,9 +141,12 @@ public:
 	    // method.
 	    try 
 	    {
-		undirected_dfs(adjacency_list, xvis, get(&VertexT::color,
-		    adjacency_list), get(&EdgeT::color, adjacency_list),
-		    start_vertices[jj]);
+			/*undirected_dfs(adjacency_list, xvis, get(&VertexT::color,
+				adjacency_list), get(&EdgeT::color, adjacency_list),
+				start_vertices[jj]);*/
+			undirected_traverse(adjacency_list, xvis, get(&VertexT::color,
+				adjacency_list), get(&EdgeT::color, adjacency_list),
+				start_vertices[jj]);
 	    }
 	    catch (Visitor::dfs_crossed& xd)
 	    {
