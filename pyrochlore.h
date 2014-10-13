@@ -8,7 +8,8 @@ class Pyrochlore : public Diamond
 private:
     AdjacencyList diamond_adjacency;
 public:
-    Pyrochlore(int n);
+    int size;
+    Pyrochlore(int n, int ny, int nz, double p, bool Firstrun);
     ~Pyrochlore() {}
 
     void percolate(const double& p, const double& q);
