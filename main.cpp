@@ -1,5 +1,6 @@
 #include "honeycomb.h"
 #include <iostream>
+#include <chrono>
 
 // TESTING
 
@@ -7,6 +8,7 @@ using namespace std;
 using namespace boost;
 
 void print_run_error(void);
+unsigned usec_seed(void);
 
 int main(int argc, char* argv[])
 {	
@@ -18,11 +20,12 @@ int main(int argc, char* argv[])
 
 	unsigned int NHEX = atoi(argv[1]);
 	unsigned int SAMPLE = atoi(argv[2]);
-	double p0 = strtod(argv[3],0);
+	double p = strtod(argv[3],0);
 	double Q = strtod(argv[4],0);
 	cout << "# nhex=" << NHEX << endl;
 	
 	Honeycomb H(NHEX);	// virgin honeycomb
+    H.setSeed(usec_seed());
 
 	// When q=1.0 the vertex percolation threshold occurs at 0.69704, while
 	// when p=1.0
@@ -34,7 +37,6 @@ int main(int argc, char* argv[])
 	    Honeycomb P = H;
 	    P.percolate(p, Q);
 	    ncrossed += P.is_crossable();
-	    }
 	    cout << p << " " << ncrossed << " " << SAMPLE << endl;
 	}
 }
@@ -49,4 +51,13 @@ void print_run_error(void)
 	cerr << "\nThe algorithm then tries a range of vertex occupation probabilities"
 	    "\np to establish the threshold for this q. It tries to make an educated"
 	    "\nguess for the range of p it needs to sample\n";
+}
+
+unsigned usec_seed(void)
+{
+    auto now = chrono::high_resolution_clock::now();
+    auto duration = now.time_since_epoch();
+    auto usecs = chrono::duration_cast<chrono::microseconds>(duration).count();
+
+    return static_cast<unsigned>(usecs);
 }

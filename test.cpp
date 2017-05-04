@@ -1,6 +1,6 @@
 #include "pyrochlore.h"
 //#include "diamond.h"
-//#include "honeycomb.h"
+#include "honeycomb.h"
 #include <iostream>
 
 using namespace std;
@@ -22,17 +22,17 @@ int main(int argc, char* argv[])
     double Q = strtod(argv[4],0);
     cout << "# n=" << N << endl;
    
-    Diamond DM(N);	
-    //Pyrochlore PC(N);
-
+    //Diamond DM(N);	
+    Pyrochlore PC(N);
     //Honeycomb H(N);	// virgin honeycomb
 
     unsigned ncrossed = 0;
     for (unsigned j=0;j<SAMPLE;j++)
     {
-		//Pyrochlore P = PC;
-		Diamond P = DM;
-		//P.percolate(p, Q); //Jan 21:still to do
+		Pyrochlore P = PC;
+		//Diamond P = DM;
+		//Honeycomb P = H;
+		P.percolate(p, Q); //Jan 21:still to do
 
        ncrossed += P.is_crossable();
     }

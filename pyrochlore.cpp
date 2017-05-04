@@ -47,6 +47,7 @@ Pyrochlore::Pyrochlore(int n) : Diamond(n)
 		    if (tv == vertex_map.end())
 		    {
 				Vertex new_vertex = point3d::add_as_vertex(tp, index++, adjacency_list);//Jan 22: defining the traversal flags for pyrochlore vertices
+				vertex_map[tp] = new_vertex;
 				tetra[j] = new_vertex;
 				if(diamond_adjacency[v].traverse==VertexT::NEAR)
 				{
@@ -63,15 +64,16 @@ Pyrochlore::Pyrochlore(int n) : Diamond(n)
 				}
 				else adjacency_list[new_vertex].traverse=VertexT::NEITHER;
 				//cout<<adjacency_list[new_vertex].x<<" "<<adjacency_list[new_vertex].y<<" "<<adjacency_list[new_vertex].z<<" "<< adjacency_list[new_vertex].traverse<<endl;
+	
 	 	   }
 	 	   else
 				tetra[j] = tv->second;		
 		}
 
 	// add all 6 edges of this tetrahedron
-		for (unsigned j=0;j<4;j++)
+		/*for (unsigned j=0;j<4;j++)
 			for (unsigned k=j+1;k<4;k++)
-					add_edge(tetra[j], tetra[k], adjacency_list);
+					add_edge(tetra[j], tetra[k], adjacency_list);*/
 			
     }
 

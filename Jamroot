@@ -19,7 +19,7 @@ lib lattice
 	
 exe test
 	:
-	test.cpp lattice
+	main.cpp lattice
 	:
 	<cxxflags>-Wno-unused-local-typedefs
 	<cxxflags>-std=c++0x
