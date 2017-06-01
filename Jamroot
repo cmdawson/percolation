@@ -6,24 +6,22 @@ project percolation
 	: default-build release
 	;
 
-lib lattice
+lib graph
 	:
-	pyrochlore.cpp
-	diamond.cpp
-	lattice.cpp
-	honeycomb.cpp
+	graph.cpp
+	unitcell.cpp
 	:
 	<cxxflags>-Wno-unused-local-typedefs
-	<cxxflags>-std=c++0x
+	<cxxflags>-std=c++11
 	;
 	
 exe test
 	:
-	main.cpp lattice
+	test.cpp graph
 	:
 	<cxxflags>-Wno-unused-local-typedefs
-	<cxxflags>-std=c++0x
+	<cxxflags>-std=c++11
 	<link>static
 	;
 	
-install convenient-copy : test lattice : <location>. ; 
+install convenient-copy : test graph : <location>. ; 

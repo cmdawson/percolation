@@ -1,53 +1,116 @@
-#include "pyrochlore.h"
-//#include "diamond.h"
-#include "honeycomb.h"
+#include "unitcell.h"
 #include <iostream>
+#include <fstream>
+
+#include <unordered_map>
+#include <boost/numeric/ublas/io.hpp>
+
+#include "coordinate.h"
 
 using namespace std;
 using namespace boost;
+using namespace boost::numeric;
 
-void print_run_error(void);
+typedef color_traits<default_color_type> Color;
+
+void save_unitcell();
+void load_unitcell();
 
 int main(int argc, char* argv[])
 {	
-    if (argc != 5)
-    {
-	    print_run_error();
-	    exit(0);
-    }
+	//save_unitcell();
+	//load_unitcell();
 
-    unsigned int N = atoi(argv[1]);
-    unsigned int SAMPLE = atoi(argv[2]);
-    double p = strtod(argv[3],0);
-    double Q = strtod(argv[4],0);
-    cout << "# n=" << N << endl;
-   
-    //Diamond DM(N);	
-    Pyrochlore PC(N);
-    //Honeycomb H(N);	// virgin honeycomb
+	Graph::coordinate v(3), w(3);
 
-    unsigned ncrossed = 0;
-    for (unsigned j=0;j<SAMPLE;j++)
-    {
-		Pyrochlore P = PC;
-		//Diamond P = DM;
-		//Honeycomb P = H;
-		P.percolate(p, Q); //Jan 21:still to do
+	v[0] = 12.5;
+	v[1] = -3.0;
+	v[2] = 1.1;
 
-       ncrossed += P.is_crossable();
-    }
+	w[0] = 12.4;
+	w[1] = -3.0;
+	w[2] = 1.1;
 
-	cout << "#Crossed " << ncrossed << "/" << SAMPLE << endl;
+
+	cout << v << endl;
+
+	//cout << _hash(v) << endl;
+	//cout << _hash(w) << endl;
+	//cout << _equals(v,w) << endl;
+	//cout << _equals2(v,v) << endl;
+
+	cout << ublas::norm_1(v-w) << endl;
+
+	std::unordered_map<std::reference_wrapper<Graph::coordinate>, int, coordinate_hash, coordinate_equals> umap(22);
+
+	umap[w] = 10;
+	umap[v] = 11;
+
+	cout << umap[w] << endl;
+	cout << umap[v] << endl;
 }
 
-
-void print_run_error(void)
+void load_unitcell()
 {
-	cerr << "Usage: main.exe N Sample p q" << endl << endl << "where" << endl 
-	    << "N means and NxN pyrochlore lattice" << endl
-	    << "Sample is the number of trials" << endl
-	    << "p is the probability of vertex being there"<<endl
-	    << "q is the probability of the edge being there" << endl;
-	cerr << "\nThe algorithm then tries a range of vertex occupation probabilities"
-	    "\np to establish the threshold for this q.\n";
+	UnitCell C;
+
+	ifstream inf;
+	inf.open("honeycomb.json");
+
+	inf >> C;
+	inf.close();
+
+	Graph G = C;
+
+	cout << G << endl;
+	cout << C << endl;
+
+	/*cout << C.axes().size() << endl;
+
+	Graph::vertex_iter v0, v1;
+    tie(v0,v1) = vertices(C.adjacency_list());
+	while (v0 != v1)
+	{
+		Graph::Vertex& v =  C.adjacency_list()[*v0++];
+		cout << v.x[0] << " " << v.x[1] << endl;
+	}*/
+
+
+	//cout << C;
 }
+
+
+void save_unitcell()
+{
+	UnitCell C;
+	Graph::AdjacencyList& adjacency_list = C.adjacency_list();
+
+	const int N=5;
+	Graph::vertex_descriptor v[N];
+
+	for (int i=0;i<N;i++)
+	{
+ 		v[i] = add_vertex(adjacency_list);
+		adjacency_list[v[i]].id = i;
+
+		adjacency_list[v[i]].x = ublas::vector<double>(3);
+		adjacency_list[v[i]].x[0] = i;
+		adjacency_list[v[i]].x[1] = 2*i;
+	}
+
+	Graph::edge_descriptor e0;
+	bool success;
+
+	for (int i=0;i<N-1;i++)
+	{
+		tie(e0,success) = add_edge(v[i], v[i+1], adjacency_list);
+		adjacency_list[e0].color = Color::green();
+	}
+
+	ofstream outf;
+	outf.open("chain.json");
+	outf << C;
+	outf.close();
+}
+
+
