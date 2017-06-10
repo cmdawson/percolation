@@ -1,5 +1,5 @@
-#ifndef _INC_PERC_LATTICE_H
-#define _INC_PERC_LATTICE_H
+#ifndef _INC_PERC_GRAPH_H
+#define _INC_PERC_GRAPH_H
 
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/undirected_dfs.hpp>
@@ -53,20 +53,10 @@ public:
     {
 		if (&G == this) 
 			return *this; 
-		
+
 		boost::copy_graph(G._adjacency_list, _adjacency_list, vertex_index_map(get(&Vertex::id, _adjacency_list)));
 
 		return *this;
-    }
-
-    Graph& operator+=(const coordinate& v)
-    {
-    	vertex_iter v0, v1;
-    	tie(v0,v1) = vertices(this->_adjacency_list);
-		while (v0 != v1)
-		{
-			A.adjacency_list()[*v0++].x += v;
-		}
     }
 
     ~Graph() {}

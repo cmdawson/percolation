@@ -1,4 +1,4 @@
-#include "unitcell.h"
+include "unitcell.h"
 
 class Lattice : public Graph
 {
@@ -8,8 +8,7 @@ private:
 
 	UnitCell& _unitCell;
 
-
-	void Lattice::add_cells(unsigned dim, vector<unsigned>& icoords)
+	void add_cells(unsigned dim, vector<unsigned>& icoords)
 	{
 		for (icoords[dim]=0; icoords[dim]<_extants[dim]; icoords[dim]++)
 		{
@@ -24,7 +23,9 @@ private:
 
 	void add_cell(const vector<unsigned>& icoords)
 	{
-		
+		// Translate the unit-cell by the icoords
+		// 
+
 	}
 
 
@@ -52,7 +53,6 @@ public:
 
 
 	~Lattice() {}
-
 
 
 };

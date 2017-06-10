@@ -18,7 +18,16 @@ public:
 	UnitCell() : Graph() {}
 	~UnitCell() {}
 
-	// TODO: Copy constructor for UnitCell
+	UnitCell& operator=(const UnitCell& U)
+    {
+		if (&U == this) 
+			return *this; 
+
+		boost::copy_graph(U._adjacency_list, _adjacency_list, vertex_index_map(get(&Vertex::id, _adjacency_list)));
+		_axes = U._axes;
+
+		return *this;
+    }
 
     friend std::ostream& operator<<(std::ostream &output, const UnitCell &C);
 	friend std::istream& operator>>(std::istream &input, UnitCell &C);

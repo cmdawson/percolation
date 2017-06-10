@@ -1,4 +1,7 @@
 # boost-build C:/boost_1_54_0/tools/build/v2 ; 
+import os ;
+use-project /boost : /usr/local/src/boost_1_54_0 ;
+
 project percolation
 	: requirements
 	<include>C:/boost_1_54_0 
@@ -8,20 +11,29 @@ project percolation
 
 lib graph
 	:
-	graph.cpp
-	unitcell.cpp
+	src/graph.cpp
+	src/unitcell.cpp
 	:
 	<cxxflags>-Wno-unused-local-typedefs
 	<cxxflags>-std=c++11
 	;
+
+lib unittest : : <name>boost_unit_test_framework ;
 	
-exe test
+exe sandbox 
 	:
-	test.cpp graph
+	tests/sandbox.cpp
+	graph
+	#unittest
 	:
+	<include>./src
 	<cxxflags>-Wno-unused-local-typedefs
 	<cxxflags>-std=c++11
 	<link>static
 	;
 	
-install convenient-copy : test graph : <location>. ; 
+install convenient-copy :
+	#graph
+	sandbox
+	:
+	<location>tests ; 

@@ -18,10 +18,47 @@ void load_unitcell();
 
 int main(int argc, char* argv[])
 {	
+	UnitCell A;
+
+	ifstream inf;
+	inf.open("tests/data/honeycomb.json");
+
+	inf >> A;
+	inf.close();
+
+	UnitCell B = A;
+
+	Graph::vertex_iter v0, v1;
+    tie(v0,v1) = vertices(A.adjacency_list());
+	while (v0 != v1)
+	{
+		property_tree::ptree node;
+		A.adjacency_list()[*v0].x += A.axes()[0];
+		//output_index[*v0] = counter++;
+		//write_vertex(node, this->_adjacency_list[*v0++]);
+		//vertex_list.push_back(make_pair("", node));
+		cout << A.adjacency_list()[*v0].x << endl;
+		v0++;
+	}
+
+	cout << "-----------------" << endl;
+
+	tie(v0,v1) = vertices(B.adjacency_list());
+	while (v0 != v1)
+	{
+		cout << B.adjacency_list()[*v0++].x << endl;
+	}
+
+
+
+
+
+
+
 	//save_unitcell();
 	//load_unitcell();
 
-	Graph::coordinate v(3), w(3);
+	/*Graph::coordinate v(3), w(3);
 
 	v[0] = 12.5;
 	v[1] = -3.0;
@@ -32,14 +69,14 @@ int main(int argc, char* argv[])
 	w[2] = 1.1;
 
 
-	cout << v << endl;
+	cout << v << endl;*/
 
 	//cout << _hash(v) << endl;
 	//cout << _hash(w) << endl;
 	//cout << _equals(v,w) << endl;
 	//cout << _equals2(v,v) << endl;
 
-	cout << ublas::norm_1(v-w) << endl;
+	/*cout << ublas::norm_1(v-w) << endl;
 
 	std::unordered_map<std::reference_wrapper<Graph::coordinate>, int, coordinate_hash, coordinate_equals> umap(22);
 
@@ -47,7 +84,7 @@ int main(int argc, char* argv[])
 	umap[v] = 11;
 
 	cout << umap[w] << endl;
-	cout << umap[v] << endl;
+	cout << umap[v] << endl;*/
 }
 
 void load_unitcell()
